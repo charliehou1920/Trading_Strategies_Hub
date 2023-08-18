@@ -16,8 +16,8 @@ computationally intensive for large parameter spaces.
 class SMABacktester(object):
     def __init__(self,symbol,SMA1,SMA2,start,end):
         self.symbol = symbol
-        self.SMA1 = SMA1
-        self.SMA2 = SMA2
+        self.SMA1 = SMA1    # Moving Average for short term
+        self.SMA2 = SMA2    # Moving Average for long term
         self.start = start
         self.end = end
         self.results = None
@@ -33,7 +33,7 @@ class SMABacktester(object):
 
     def set_parameters(self, SMA1=None, SMA2=None):
         '''
-          Updates SMA parameters and resp. time series.
+          Updates SMA parameters and time series.
         '''
         if SMA1 is not None:
             self.SMA1 = SMA1
@@ -94,6 +94,13 @@ class SMABacktester(object):
         opt = brute(self.update_and_run, (SMA1_range, SMA2_range), finish=None)
         return opt, -self.update_and_run(opt)
     
+if __name__ == '__main__':
+    smabt = SMABacktester('META', 42, 252,
+                                '2020-1-1', '2023-8-19')
+    print(smabt.run_strategy())
+    smabt.set_parameters(SMA1=20, SMA2=100)
+    print(smabt.run_strategy())
+    print(smabt.optimize_parameters((30, 56, 4), (200, 300, 4)))
 
         
 
